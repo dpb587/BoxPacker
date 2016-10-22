@@ -21,7 +21,8 @@ class TestBox implements Box
         $innerWidth,
         $innerLength,
         $innerDepth,
-        $maxWeight
+        $maxWeight,
+        $maxValue
     ) {
         $this->reference = $reference;
         $this->outerWidth = $outerWidth;
@@ -31,6 +32,7 @@ class TestBox implements Box
         $this->innerWidth = $innerWidth;
         $this->innerLength = $innerLength;
         $this->innerDepth = $innerDepth;
+        $this->maxValue = $maxValue;
         $this->maxWeight = $maxWeight;
         $this->innerVolume = $this->innerWidth * $this->innerLength * $this->innerDepth;
     }
@@ -84,18 +86,24 @@ class TestBox implements Box
     {
         return $this->maxWeight;
     }
+
+    public function getMaxValue()
+    {
+        return $this->maxValue;
+    }
 }
 
 class TestItem implements Item
 {
 
-    public function __construct($description, $width, $length, $depth, $weight, $keepFlat)
+    public function __construct($description, $width, $length, $depth, $weight, $value, $keepFlat)
     {
         $this->description = $description;
         $this->width = $width;
         $this->length = $length;
         $this->depth = $depth;
         $this->weight = $weight;
+        $this->value = $value;
         $this->keepFlat = $keepFlat;
 
         $this->volume = $this->width * $this->length * $this->depth;
@@ -124,6 +132,11 @@ class TestItem implements Item
     public function getWeight()
     {
         return $this->weight;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
     }
 
     public function getVolume()

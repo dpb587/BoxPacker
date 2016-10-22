@@ -56,6 +56,12 @@ class VolumePacker implements LoggerAwareInterface
     protected $remainingWeight;
 
     /**
+     * Remaining value of the box
+     * @var int
+     */
+    protected $remainingValue;
+
+    /**
      * Constructor
      */
     public function __construct(Box $box, ItemList $items)
@@ -67,6 +73,7 @@ class VolumePacker implements LoggerAwareInterface
 
         $this->depthLeft = $this->box->getInnerDepth();
         $this->remainingWeight = $this->box->getMaxWeight() - $this->box->getEmptyWeight();
+        $this->remainingValue = $this->box->getMaxValue();
         $this->widthLeft = $this->box->getInnerWidth();
         $this->lengthLeft = $this->box->getInnerLength();
     }
@@ -89,14 +96,43 @@ class VolumePacker implements LoggerAwareInterface
 
             $itemToPack = $this->items->extract();
 
+            $this->logger->debug(
+                sprintf(
+                    'packing item: %s (%dx%dx%d, %dg, %.2f)',
+                    $itemToPack->getDescription(),
+                    $itemToPack->getWidth(),
+                    $itemToPack->getLength(),
+                    $itemToPack->getDepth(),
+                    $itemToPack->getWeight(),
+                    $itemToPack->getValue()
+                )
+            );
+
+            $this->logger->debug(
+                sprintf(
+                    'current box: remaining (%dx%dx%d, layer %dx%dx%d, %dg, %.2f)',
+                    $this->widthLeft,
+                    $this->lengthLeft,
+                    $this->depthLeft,
+                    $layerWidth,
+                    $layerLength,
+                    $layerDepth,
+                    $this->remainingWeight,
+                    $this->remainingValue
+                )
+            );
+
             //skip items that are simply too heavy
             if ($itemToPack->getWeight() > $this->remainingWeight) {
+                $this->logger->debug("skipping: weight: item {$itemToPack->getWeight()} > box {$this->remainingWeight}");
                 continue;
             }
 
-            $this->logger->debug("evaluating item {$itemToPack->getDescription()}");
-            $this->logger->debug("remaining width: {$this->widthLeft}, length: {$this->lengthLeft}, depth: {$this->depthLeft}");
-            $this->logger->debug("layerWidth: {$layerWidth}, layerLength: {$layerLength}, layerDepth: {$layerDepth}");
+            //skip items that are simply too valuable
+            if ($itemToPack->getValue() > $this->remainingValue) {
+                $this->logger->debug("skipping: value: item {$itemToPack->getValue()} > box {$this->remainingValue}");
+                continue;
+            }
 
             $nextItem = !$this->items->isEmpty() ? $this->items->top() : null;
             $orientatedItem = $this->findBestOrientation($itemToPack, $prevItem, $nextItem, $this->widthLeft, $this->lengthLeft, $this->depthLeft);
@@ -104,6 +140,7 @@ class VolumePacker implements LoggerAwareInterface
             if ($orientatedItem) {
 
                 $packedItems->insert($orientatedItem->getItem());
+                $this->remainingValue -= $itemToPack->getValue();
                 $this->remainingWeight -= $itemToPack->getWeight();
 
                 $this->lengthLeft -= $orientatedItem->getLength();
@@ -143,7 +180,7 @@ class VolumePacker implements LoggerAwareInterface
             }
         }
         $this->logger->debug("done with this box");
-        return new PackedBox($this->box, $packedItems, $this->widthLeft, $this->lengthLeft, $this->depthLeft, $this->remainingWeight);
+        return new PackedBox($this->box, $packedItems, $this->widthLeft, $this->lengthLeft, $this->depthLeft, $this->remainingWeight, $this->remainingValue);
     }
 
     /**
@@ -233,10 +270,11 @@ class VolumePacker implements LoggerAwareInterface
      */
     protected function tryAndStackItemsIntoSpace(ItemList $packedItems, $maxWidth, $maxLength, $maxDepth)
     {
-        while (!$this->items->isEmpty() && $this->remainingWeight >= $this->items->top()->getWeight()) {
+        while (!$this->items->isEmpty() && $this->remainingWeight >= $this->items->top()->getWeight() && $this->remainingValue >= $this->items->top()->getValue()) {
             $stackedItem = $this->findBestOrientation($this->items->top(), null, null, $maxWidth, $maxLength, $maxDepth);
             if ($stackedItem) {
                 $this->remainingWeight -= $this->items->top()->getWeight();
+                $this->remainingValue -= $this->items->top()->getValue();
                 $maxDepth -= $stackedItem->getDepth();
                 $packedItems->insert($this->items->extract());
             } else {

@@ -73,4 +73,10 @@ interface Box
      * @return int
      */
     public function getMaxWeight();
+
+    /**
+     * Max value the packaging can hold
+     * @return float
+     */
+    public function getMaxValue();
 }

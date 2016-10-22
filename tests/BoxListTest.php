@@ -13,9 +13,9 @@ class BoxListTest extends \PHPUnit_Framework_TestCase
     function testCompare()
     {
 
-        $box1 = new TestBox('Small', 21, 21, 3, 1, 20, 20, 2, 100);
-        $box2 = new TestBox('Large', 201, 201, 21, 1, 200, 200, 20, 1000);
-        $box3 = new TestBox('Medium', 101, 101, 11, 5, 100, 100, 10, 500);
+        $box1 = new TestBox('Small', 21, 21, 3, 1, 20, 20, 2, 100, 100);
+        $box2 = new TestBox('Large', 201, 201, 21, 1, 200, 200, 20, 1000, 100);
+        $box3 = new TestBox('Medium', 101, 101, 11, 5, 100, 100, 10, 500, 100);
 
         $list = new BoxList;
         $list->insert($box1);
@@ -31,9 +31,9 @@ class BoxListTest extends \PHPUnit_Framework_TestCase
 
     function testIssue14A()
     {
-        $box1 = new TestBox('Small', 21, 21, 3, 1, 20, 20, 2, 100);
-        $box2 = new TestBox('Large', 1301, 1301, 1301, 1, 1300, 1300, 1300, 1000);
-        $box3 = new TestBox('Medium', 101, 101, 11, 5, 100, 100, 10, 500);
+        $box1 = new TestBox('Small', 21, 21, 3, 1, 20, 20, 2, 100, 100);
+        $box2 = new TestBox('Large', 1301, 1301, 1301, 1, 1300, 1300, 1300, 1000, 100);
+        $box3 = new TestBox('Medium', 101, 101, 11, 5, 100, 100, 10, 500, 100);
         $list = new BoxList;
         $list->insert($box1);
         $list->insert($box2);
@@ -47,9 +47,9 @@ class BoxListTest extends \PHPUnit_Framework_TestCase
 
     function testIssue14B()
     {
-        $box1 = new TestBox('Small', 21, 21, 3, 1, 20, 20, 2, 100);
-        $box2 = new TestBox('Large', 1301, 1301, 1301, 1, 1300, 1300, 1300, 1000);
-        $box3 = new TestBox('Medium', 101, 101, 11, 5, 100, 100, 10, 500);
+        $box1 = new TestBox('Small', 21, 21, 3, 1, 20, 20, 2, 100, 100);
+        $box2 = new TestBox('Large', 1301, 1301, 1301, 1, 1300, 1300, 1300, 1000, 100);
+        $box3 = new TestBox('Medium', 101, 101, 11, 5, 100, 100, 10, 500, 100);
         $list = new BoxList;
         $list->insert($box3);
         $list->insert($box2);

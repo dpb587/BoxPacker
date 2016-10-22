@@ -56,6 +56,11 @@ class Packer implements LoggerAwareInterface
         $this->logger->log(LogLevel::INFO, "added {$qty} x {$item->getDescription()}");
     }
 
+    public function getItems()
+    {
+        return $this->items;
+    }
+
     /**
      * Set a list of items all at once
      * @param \Traversable|array $items

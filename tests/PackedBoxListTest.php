@@ -11,13 +11,13 @@ class PackedBoxListTest extends \PHPUnit_Framework_TestCase
 {
     function testVolumeUtilisation()
     {
-        $box = new TestBox('Box', 10, 10, 10, 10, 10, 10, 10, 10);
-        $item = new TestItem('Item', 5, 10, 10, 10, true);
+        $box = new TestBox('Box', 10, 10, 10, 10, 10, 10, 10, 10, 100);
+        $item = new TestItem('Item', 5, 10, 10, 10, 1, true);
 
         $boxItems = new ItemList();
         $boxItems->insert($item);
 
-        $packedBox = new PackedBox($box, $boxItems, 1, 2, 3, 4);
+        $packedBox = new PackedBox($box, $boxItems, 1, 2, 3, 4, 100);
 
         $packedBoxList = new PackedBoxList();
         $packedBoxList->insert($packedBox);
@@ -27,13 +27,13 @@ class PackedBoxListTest extends \PHPUnit_Framework_TestCase
 
     function testWeightVariance()
     {
-        $box = new TestBox('Box', 10, 10, 10, 10, 10, 10, 10, 10);
-        $item = new TestItem('Item', 5, 10, 10, 10, true);
+        $box = new TestBox('Box', 10, 10, 10, 10, 10, 10, 10, 10, 100);
+        $item = new TestItem('Item', 5, 10, 10, 10, 1, true);
 
         $boxItems = new ItemList();
         $boxItems->insert($item);
 
-        $packedBox = new PackedBox($box, $boxItems, 1, 2, 3, 4);
+        $packedBox = new PackedBox($box, $boxItems, 1, 2, 3, 4, 100);
 
         $packedBoxList = new PackedBoxList();
         $packedBoxList->insert($packedBox);

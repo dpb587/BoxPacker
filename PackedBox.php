@@ -33,6 +33,12 @@ class PackedBox
     protected $weight;
 
     /**
+     * Total value of box
+     * @var float
+     */
+    protected $value;
+
+    /**
      * Remaining width inside box for another item
      * @var int
      */
@@ -55,6 +61,12 @@ class PackedBox
      * @var int
      */
     protected $remainingWeight;
+
+    /**
+     * Remaining value for another item
+     * @var float
+     */
+    protected $remainingValue;
 
     /**
      * Get box used
@@ -94,6 +106,24 @@ class PackedBox
     }
 
     /**
+     * Get content value
+     * @return float currency
+     */
+    public function getValue()
+    {
+        if (!is_null($this->value)) {
+            return $this->value;
+        }
+
+        $this->value = 0;
+        $items = clone $this->items;
+        foreach ($items as $item) {
+            $this->value += $item->getValue();
+        }
+        return $this->value;
+    }
+
+    /**
      * Get remaining width inside box for another item
      * @return int
      */
@@ -130,6 +160,15 @@ class PackedBox
     }
 
     /**
+     * Get remaining value for another item
+     * @return float
+     */
+    public function getRemainingValue()
+    {
+        return $this->remainingValue;
+    }
+
+    /**
      * Get volume utilisation of the packed box
      * @return float
      */
@@ -155,8 +194,9 @@ class PackedBox
      * @param int      $remainingLength
      * @param int      $remainingDepth
      * @param int      $remainingWeight
+     * @param float    $remainingValue
      */
-    public function __construct(Box $box, ItemList $itemList, $remainingWidth, $remainingLength, $remainingDepth, $remainingWeight)
+    public function __construct(Box $box, ItemList $itemList, $remainingWidth, $remainingLength, $remainingDepth, $remainingWeight, $remainingValue)
     {
         $this->box = $box;
         $this->items = $itemList;
@@ -164,5 +204,6 @@ class PackedBox
         $this->remainingLength = $remainingLength;
         $this->remainingDepth = $remainingDepth;
         $this->remainingWeight = $remainingWeight;
+        $this->remainingValue = $remainingValue;
     }
 }

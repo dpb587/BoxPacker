@@ -23,6 +23,10 @@ class BoxList extends \SplMinHeap
             return 1;
         } elseif ($boxB->getInnerVolume() < $boxA->getInnerVolume()) {
             return -1;
+        } elseif ($boxB->getMaxWeight() > $boxA->getMaxWeight()) {
+            return 1;
+        } elseif ($boxB->getMaxWeight() < $boxA->getMaxWeight()) {
+            return -1;
         } else {
             return 0;
         }

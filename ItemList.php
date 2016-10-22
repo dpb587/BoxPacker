@@ -24,6 +24,10 @@ class ItemList extends \SplMaxHeap
             return 1;
         } elseif ($itemA->getVolume() < $itemB->getVolume()) {
             return -1;
+        } elseif ($itemA->getValue() > $itemB->getValue()) {
+            return 1;
+        } elseif ($itemA->getValue() < $itemB->getValue()) {
+            return -1;
         } else {
             return $itemA->getWeight() - $itemB->getWeight();
         }

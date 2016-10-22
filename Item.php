@@ -51,6 +51,12 @@ interface Item
     public function getVolume();
 
     /**
+     * Item value
+     * @return float
+     */
+    public function getValue();
+
+    /**
      * Does this item need to be kept flat?
      * XXX not yet used, all items are kept flat
      * @return bool
